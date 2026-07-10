@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ink-950 text-ink-100;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl;
+  }
+  .glass-strong {
+    @apply bg-white/[0.08] backdrop-blur-2xl border border-white/10 shadow-2xl;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-violet-300 to-fuchsia-300;
+  }
+  .glow {
+    box-shadow: 0 0 40px theme('colors.indigo.500' / 0.15), 0 0 80px theme('colors.indigo.500' / 0.05);
+  }
+}
