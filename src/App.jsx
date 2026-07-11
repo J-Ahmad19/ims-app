@@ -11,6 +11,8 @@ import DashboardHome from './components/DashboardHome'
 import ProductsPage from './components/ProductsPage'
 import OrdersPage from './components/OrdersPage'
 import WarehousesPage from './components/WarehousesPage'
+import SuppliersPage from './components/SuppliersPage';
+import ReceivingPage from './components/ReceivingPage';
 
 function LandingPage() {
   return (
@@ -45,6 +47,8 @@ export default function App() {
             <Route path="products" element={<ProductsPage />} />
             <Route path="orders" element={<OrdersPage />} />
             <Route path="warehouses" element={<WarehousesPage />} />
+            <Route path="suppliers" element={<SuppliersPage />} />
+            <Route path="receiving" element={<ReceivingPage />} />
           </Route>
         </Routes>
       </Router>
