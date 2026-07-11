@@ -7,18 +7,19 @@ export const getStockLevels = (req, res) => {
   console.info(`[INFO] ${new Date().toISOString()} - GET /stock - Request received from ${req.ip}`);
 
   const sql = `
-      SELECT 
-          p.id AS product_id,
-          p.sku, 
-          p.name AS product_name, 
-          IFNULL(sl.quantity, 0) AS quantity, 
-          IFNULL(sl.low_stock_threshold, 10) AS low_stock_threshold,
-          IFNULL(w.code, 'No Location') AS warehouse_code
-      FROM products p
-      LEFT JOIN stock_levels sl ON p.id = sl.product_id
-      LEFT JOIN warehouses w ON sl.warehouse_id = w.id
-      ORDER BY quantity ASC;
-    `;
+    SELECT 
+        sl.id, 
+        sl.quantity, 
+        sl.low_stock_threshold, 
+        sl.last_updated,
+        p.sku, 
+        p.name AS product_name, 
+        w.code AS warehouse_code
+    FROM stock_levels sl
+    JOIN products p ON sl.product_id = p.id
+    JOIN warehouses w ON sl.warehouse_id = w.id
+    ORDER BY (sl.quantity / sl.low_stock_threshold) ASC;
+  `;
 
   db.query(sql, (err, data) => {
     const duration = Date.now() - startTime;

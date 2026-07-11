@@ -9,6 +9,7 @@ import supplierRoutes from './routes/supplierRoutes.js';
 import poRoutes from './routes/poRoutes.js';
 import stockRoutes from './routes/stockRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 
 dotenv.config();
@@ -31,6 +32,7 @@ try {
   app.use('/stock', stockRoutes);
   
   app.use('/customers', customerRoutes);
+  app.use('/dashboard-stats', dashboardRoutes);
 
   // Start Server
   const PORT = process.env.PORT; 

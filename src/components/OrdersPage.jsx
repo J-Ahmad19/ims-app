@@ -21,21 +21,53 @@ export default function OrdersPage() {
 
   useEffect(() => {
     fetchOrders();
-    // Fetch dropdown data for the modal
-    fetch('http://localhost:5001/customers').then(r => r.json()).then(setCustomers);
-    fetch('http://localhost:5001/products').then(r => r.json()).then(setProducts);
-    fetch('http://localhost:5001/warehouses').then(r => r.json()).then(setWarehouses);
+    
+    // Safely fetch dropdown data
+    fetch('http://localhost:5001/customers')
+      .then(r => r.json())
+      .then(data => setCustomers(Array.isArray(data) ? data : []))
+      .catch(err => console.error(err));
+      
+    fetch('http://localhost:5001/products')
+      .then(r => r.json())
+      .then(data => setProducts(Array.isArray(data) ? data : []))
+      .catch(err => console.error(err));
+      
+    fetch('http://localhost:5001/warehouses')
+      .then(r => r.json())
+      .then(data => setWarehouses(Array.isArray(data) ? data : []))
+      .catch(err => console.error(err));
   }, []);
 
   const fetchOrders = async () => {
     try {
       const res = await fetch('http://localhost:5001/orders');
-      setOrders(await res.json());
+      const data = await res.json();
+      
+      // CRASH PREVENTION: Ensure data is an array before setting it
+      if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        console.error("Backend did not return an array:", data);
+        setOrders([]);
+      }
     } catch (err) {
       console.error("Error fetching orders:", err);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  // UI ENHANCEMENT: Dynamic Status Styling
+  const getStatusStyle = (status) => {
+    const s = status ? status.toLowerCase() : '';
+    if (s === 'completed') return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20';
+    if (s === 'pending') return 'bg-amber-500/15 text-amber-400 border-amber-500/20';
+    if (s === 'processing') return 'bg-indigo-500/15 text-indigo-400 border-indigo-500/20';
+    if (s === 'in-transit') return 'bg-blue-500/15 text-blue-400 border-blue-500/20';
+    if (s === 'cancelled') return 'bg-rose-500/15 text-rose-400 border-rose-500/20';
+    return 'bg-slate-500/15 text-slate-400 border-slate-500/20'; // Default fallback
   };
 
   // Handle Product Selection to auto-fill the price
@@ -53,7 +85,6 @@ export default function OrdersPage() {
   const handleCreateOrder = async (e) => {
     e.preventDefault();
     
-    // Format the payload exactly how our backend transaction expects it
     const payload = {
       customer_id: formData.customer_id,
       items: [
@@ -79,11 +110,10 @@ export default function OrdersPage() {
       alert("Order created successfully! Stock has been deducted.");
       setIsModalOpen(false);
       
-      // Reset form
       setFormData({ customer_id: '', product_id: '', warehouse_id: '', quantity: 1, unit_price: 0 });
       fetchOrders();
     } catch (err) {
-      alert(err.message); // This will show our "Insufficient stock" error if they try to buy too much!
+      alert(err.message); 
     }
   };
 
@@ -116,13 +146,16 @@ export default function OrdersPage() {
             <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr><td colSpan="4" className="px-6 py-8 text-center text-ink-500">Loading orders...</td></tr>
+              ) : orders.length === 0 ? (
+                <tr><td colSpan="4" className="px-6 py-8 text-center text-ink-500">No orders found.</td></tr>
               ) : orders.map((order) => (
                 <tr key={order.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 text-sm font-mono text-indigo-300">#{order.id}</td>
                   <td className="px-6 py-4 text-sm font-medium text-white">{order.customer_name}</td>
                   <td className="px-6 py-4 text-sm text-ink-300">${Number(order.total_amount).toFixed(2)}</td>
                   <td className="px-6 py-4">
-                    <span className="inline-flex px-2.5 py-1 rounded-md text-xs font-medium border bg-emerald-500/15 text-emerald-400 border-emerald-500/20">
+                    {/* DYNAMIC STYLING APPLIED HERE */}
+                    <span className={`inline-flex px-2.5 py-1 rounded-md text-xs font-medium border ${getStatusStyle(order.order_status)}`}>
                       {order.order_status}
                     </span>
                   </td>
