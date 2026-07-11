@@ -15,7 +15,7 @@ export default function Login() {
     const data = await response.json();
     if (response.ok) {
       alert('Login successful!');
-      navigate('/'); // Redirect to dashboard/home
+      navigate('/dashboard'); // Redirect to dashboard/home
     } else {
       alert(data.error);
     }

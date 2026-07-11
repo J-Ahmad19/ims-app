@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import warehouseRoutes from './routes/warehouseRoutes.js';
 
 dotenv.config();
 
@@ -15,6 +18,9 @@ try {
 
   // Mount Routes
   app.use('/', authRoutes);
+  app.use('/products', productRoutes);
+  app.use('/orders', orderRoutes);
+  app.use('/warehouses', warehouseRoutes);
 
   // Start Server
   const PORT = process.env.PORT; 
@@ -25,3 +31,4 @@ try {
 } catch (globalError) {
   console.error("Failed to start server:", globalError);
 }
+

@@ -6,8 +6,12 @@ import TrustBadges from './components/TrustBadges'
 import Footer from './components/Footer'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import DashboardLayout from './components/DashboardLayout'
+import DashboardHome from './components/DashboardHome'
+import ProductsPage from './components/ProductsPage'
+import OrdersPage from './components/OrdersPage'
+import WarehousesPage from './components/WarehousesPage'
 
-// Extract your existing landing page into a component
 function LandingPage() {
   return (
     <>
@@ -27,12 +31,21 @@ function LandingPage() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-ink-950 overflow-hidden">
+    <div className="min-h-screen bg-ink-950 overflow-hidden text-white">
       <Router>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+
+          {/* Protected Dashboard Routes */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="warehouses" element={<WarehousesPage />} />
+          </Route>
         </Routes>
       </Router>
     </div>
