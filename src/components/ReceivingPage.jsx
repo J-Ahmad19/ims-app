@@ -49,10 +49,10 @@ export default function ReceivingPage() {
     <div className="space-y-6 relative">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Receiving & POs</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">Receiving & Purchase Orders(POs)</h1>
           <p className="text-sm text-ink-400 mt-1">Order stock and log inbound shipments.</p>
         </div>
-        <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium text-sm">+ Create PO</button>
+        <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium text-sm">+ Create Purchase Order</button>
       </div>
 
       <div className="glass rounded-2xl overflow-hidden">

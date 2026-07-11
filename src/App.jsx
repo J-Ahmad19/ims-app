@@ -13,6 +13,8 @@ import OrdersPage from './components/OrdersPage'
 import WarehousesPage from './components/WarehousesPage'
 import SuppliersPage from './components/SuppliersPage';
 import ReceivingPage from './components/ReceivingPage';
+import StockLevelsPage from './components/StockLevelsPage';
+
 
 function LandingPage() {
   return (
@@ -45,8 +47,9 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardHome />} />
             <Route path="products" element={<ProductsPage />} />
-            <Route path="orders" element={<OrdersPage />} />
+            <Route path="stock" element={<StockLevelsPage />} />
             <Route path="warehouses" element={<WarehousesPage />} />
+            <Route path="orders" element={<OrdersPage />} />
             <Route path="suppliers" element={<SuppliersPage />} />
             <Route path="receiving" element={<ReceivingPage />} />
           </Route>
