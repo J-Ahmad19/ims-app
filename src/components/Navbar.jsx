@@ -1,9 +1,16 @@
-import { Link } from 'react-router-dom';
-
+import { useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import gsap from 'gsap'
 
 export default function Navbar() {
+  const navRef = useRef(null)
+
+  useEffect(() => {
+    gsap.fromTo(navRef.current, { y: -30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' })
+  }, [])
+
   return (
-    <nav className="relative z-50">
+    <nav ref={navRef} className="relative z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <div className="flex items-center gap-2">

@@ -11,11 +11,33 @@ const logos = [
   'RetailPlus', 'CargoHub', 'ShipFast', 'StockPile', 'DistribuPro',
 ]
 
+import { useRef, useEffect } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
 export default function TrustBadges() {
+  const sectionRef = useRef(null)
+  const headerRef = useRef(null)
+  const badgesRef = useRef([])
+  const logosRef = useRef(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(headerRef.current, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: headerRef.current, start: 'top 85%' } })
+      gsap.fromTo(badgesRef.current, { y: 40, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'power3.out', stagger: 0.08, scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' } })
+      if (logosRef.current) {
+        gsap.fromTo(logosRef.current, { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: logosRef.current, start: 'top 85%' } })
+      }
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section className="relative z-10 py-20 lg:py-28">
+    <section ref={sectionRef} className="relative z-10 py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        <div className="text-center space-y-4">
+        <div ref={headerRef} className="text-center space-y-4">
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Trusted by industry leaders
           </h2>
@@ -25,9 +47,10 @@ export default function TrustBadges() {
         </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 sm:gap-4">
-          {badges.map((badge) => (
+          {badges.map((badge, i) => (
             <div
               key={badge.name}
+              ref={(el) => { badgesRef.current[i] = el }}
               className="glass rounded-xl p-4 sm:p-5 text-center space-y-2 hover:bg-white/[0.10] transition-all duration-300"
             >
               <div className="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center mx-auto">
@@ -50,7 +73,7 @@ export default function TrustBadges() {
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-6 sm:gap-8 items-center justify-items-center opacity-40">
+        <div ref={logosRef} className="grid grid-cols-5 gap-6 sm:gap-8 items-center justify-items-center opacity-40">
           {logos.map((logo) => (
             <div key={logo} className="text-sm font-bold text-ink-400 tracking-widest whitespace-nowrap">
               {logo}

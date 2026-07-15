@@ -1,3 +1,6 @@
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+
 const features = [
   {
     title: 'Real-time Stock Sync',
@@ -55,11 +58,33 @@ const features = [
   },
 ]
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+}
+
+const cardVariants = {
+  hidden: { y: 40, opacity: 0, scale: 0.95 },
+  visible: (i) => ({
+    y: 0, opacity: 1, scale: 1,
+    transition: { delay: i * 0.06, duration: 0.5, ease: 'easeOut' },
+  }),
+}
+
 export default function Features() {
+  const sectionRef = useRef(null)
+  const isInView = useInView(sectionRef, { once: true })
+
   return (
-    <section className="relative z-10 py-20 lg:py-32">
+    <section ref={sectionRef} className="relative z-10 py-20 lg:py-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+        <motion.div
+          initial={{ y: 40, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-center max-w-2xl mx-auto mb-16 space-y-4"
+        >
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Everything you need to{' '}
             <span className="text-gradient">manage inventory</span>
@@ -67,22 +92,38 @@ export default function Features() {
           <p className="text-ink-400 text-lg">
             From receiving dock to last-mile delivery — one platform connects every link in your supply chain.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"
+        >
           {features.map((f, i) => (
-            <div
+            <motion.div
               key={i}
-              className="group glass rounded-2xl p-6 sm:p-7 hover:bg-white/[0.10] transition-all duration-300 hover:-translate-y-0.5"
+              custom={i}
+              variants={cardVariants}
+              whileHover={{ y: -6, scale: 1.015, transition: { duration: 0.2 } }}
+              className="group glass rounded-2xl p-6 sm:p-7 overflow-hidden relative"
             >
-              <div className="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-4 group-hover:bg-indigo-500/25 group-hover:text-indigo-300 transition-all">
-                {f.icon}
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-violet-500/0 to-fuchsia-500/0 group-hover:from-indigo-500/5 group-hover:via-violet-500/5 group-hover:to-fuchsia-500/5 transition-all duration-500" />
+              <div className="relative">
+                <motion.div
+                  whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-10 h-10 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center mb-4 group-hover:bg-indigo-500/25 group-hover:text-indigo-300 transition-all"
+                >
+                  {f.icon}
+                </motion.div>
+                <h3 className="text-base font-semibold text-white mb-2">{f.title}</h3>
+                <p className="text-sm text-ink-400 leading-relaxed">{f.desc}</p>
               </div>
-              <h3 className="text-base font-semibold text-white mb-2">{f.title}</h3>
-              <p className="text-sm text-ink-400 leading-relaxed">{f.desc}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
